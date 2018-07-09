@@ -11,6 +11,7 @@ footnotereturnlinkcontents = "↩"
 [permalinks]
     post = "/post/:year/:month/:day/:slug/"
     note = "/note/:year/:month/:day/:slug/"
+    tech = "/note/:year/:month/:day/:slug/"
 
 [[menu.main]]
     name = "Home"
