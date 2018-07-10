@@ -11,4 +11,4 @@ tags:
 
 ## A.参考 ##
 
-1. Document of Markdown Syntax(繁体):[Markdown Syntax](https://markdown.tw/#blockquote)
+1. Document of Markdown Syntax(繁体):[Markdown Syntax](https://markdown.tw)
