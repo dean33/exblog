@@ -5,6 +5,7 @@ theme = "hugo-ivy"
 googleAnalytics = ""
 disqusShortname = ""
 ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
+hasCJKLanguage = true
 preserveTaxonomyNames = true
 footnotereturnlinkcontents = "↩"
 

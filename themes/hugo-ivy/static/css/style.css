@@ -62,6 +62,13 @@ blockquote {
   border-left: 3px solid #ddd;
 }
 
+#TableOfContents, #TOC {
+  border: 1px solid #eee;
+  border-radius: 5px;
+}
+
+
+
 /* Code */
 
 pre, code {
