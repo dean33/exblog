@@ -2,6 +2,7 @@
 title: Markdown resouce
 author: deyin
 date: '2018-07-10'
+weight: 10
 slug: markdown-resouce
 categories: 
   - tech
