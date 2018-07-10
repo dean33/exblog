@@ -2,11 +2,7 @@
 title: Home
 ---
 
-
-
-# On the way 
-
-## Seeking life meaning
+## Just do it
 
 There are three sub directory now:
 
