@@ -2,7 +2,7 @@
 title: Home
 ---
 
-## Just do it
+# Just do it
 
 There are three sub directory now:
 
