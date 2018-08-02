@@ -11,11 +11,12 @@ This passage is meant to record the essential information technology needs when 
 
 
 **Non-production IT needs:**  
+- 虚拟化：KVM    
 - 邮件系统：Mail  
 - 文档协作：Git  
 - 目录管理：LDAP  
 - *开发管理：持续集成与部署CI/CD*  
-- *运行监测：Zabbix*
+- *运行监测：Zabbix*  
 - ERP：odoo^[[odoo](www.odoo.com)]或其他开源ERP^[[值得考虑的九大开源ERP系统](http://os.51cto.com/art/201804/570668.htm)]  
   
   
@@ -59,9 +60,18 @@ CentOS Linux release 7.5.1804 (Core)
 > <font color='blue'>[root@hoster ~]#</font> cat /proc/cpuinfo   
 <font color='blue'>[root@hoster ~]#</font> lscpu  
 
-**修改主机名**  
+**修改主机名^[[如何在CentOS 7上修改主机名](https://www.jianshu.com/p/39d7000dfa47)]**  
 
-> <font color='blue'>[root@hoster ~]#</font> **sysctl** kernel.hostname=your_hostname
+> <font color='blue'>[root@hoster ~]#</font> **hostnamectl** set-hostname test  
+<font color='blue'>[root@hoster ~]#</font> vim /etc/hosts  
+#127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4  
+127.0.0.1   test  
+#::1         localhost localhost.localdomain localhost6 localhost6.localdomain6  
+::1        test  
+
+然后reboot重启即可。
+
+
 
 **yum搜索程序**  
 
@@ -134,6 +144,65 @@ Length: 4470079488 (4.2G) [application/octet-stream]
 Remote file exists.  
 
 
+**修改IP地址**
+
+1、设置网卡信息  
+>[root@localhost network-scripts]# vi ifcfg-eth0  
+NAME="eth0"  
+HWADDR="52:54:00:5f:c1:ea"  
+ONBOOT=yes  
+NETBOOT=yes  
+UUID="45e9e09e-fcce-4141-9b12-035c40898eca"  
+IPV6INIT=yes  
+BOOTPROTO=static  
+TYPE=Ethernet  
+**IPADDR=10.1.23.110  
+NETMASK=255.255.255.0  
+GATEWAY=10.1.23.254  
+DNS=61.139.2.69**  
+
+2、重启网络  
+>[root@localhost network-scripts]# systemctl restart network.service
+
+3、nameserver设置
+>[root@vm1 ~]# ping www.baidu.com  
+ping: www.baidu.com: Name or service not known
+
+>[root@vm1 ~]# vi /etc/resolv.conf  
+nameserver 8.8.8.8  
+nameserver 8.8.4.4  
+
+
+
+
+
+**任务管理器top**
+
+[top linux下的任务管理器](http://linuxtools-rst.readthedocs.io/zh_CN/latest/tool/top.html#top)
+
+Top下的常用交互命令：  
+
+> q：退出top命令  
+<Space>：立即刷新  
+s：设置刷新时间间隔  
+c：显示命令完全模式  
+t:：显示或隐藏进程和CPU状态信息  
+m：显示或隐藏内存状态信息  
+l：显示或隐藏uptime信息  
+f：增加或减少进程显示标志  
+S：累计模式，会把已完成或退出的子进程占用的CPU时间累计到父进程的MITE+  
+P：按%CPU使用率排行  
+T：按MITE+排行    
+M：按%MEM排行  
+u：指定显示用户进程  
+r：修改进程renice值  
+kkill：进程  
+i：只显示正在运行的进程  
+W：保存对top的设置到文件^/.toprc，下次启动将自动调用toprc文件的设置。  
+h：帮助命令。  
+q：退出  
+注：强调一下，**使用频率最高的是P、T、M**，因为通常使用top，我们就想看看是哪些进程最耗cpu资源、占用的内存最多  
+
 
 ### KVM虚拟化
 
@@ -191,6 +260,98 @@ Connection 'br0' (0f4b7bc8-8c7a-461a-bff1-d516b941a6ec) successfully added.
        valid_lft forever preferred_lft forever*  
 
 #### 创建一台虚拟机^[[Create Virtual Machine#1](https://www.server-world.info/en/note?os=CentOS_7&p=kvm&f=2)]  
+
+1、执行下面的命令  
+> 
+<font color='blue'>[root@hoster ~]#</font> virt-install \  
+--name test \  
+--ram 4096 \  
+--disk path=/var/kvm/images/test.img,size=30 \  
+--vcpus 2 \  
+--os-type linux \  
+--os-variant rhel7 \  
+--network bridge=br0 \  
+--graphics none \  
+--console pty,target_type=serial \  
+--location 'http://mirrors.aliyun.com/centos/7/os/x86_64/' \  
+--extra-args 'console=ttyS0,115200n8 serial'  
+
+2、进入文字模式安装  
+
+3、宿主机、客户机的切换  
+进入客户机：
+
+> [root@boss420 qemu]# **virsh** console test  
+Connected to domain test  
+Escape character is ^]  
+
+退出客户机回到宿主机：
+按热键：ctrl+]
+
+
+4、克隆这个干净的虚拟机硬件文件为模板以后备用  
+
+> [root@boss420 qemu]# **virt-clone** --original test --name template --file /var/kvm/images/template.img  
+Allocating 'template.img'              |  30 GB  00:00:13
+Clone 'template' created successfully.
+
+>[root@boss420 images]# virt-clone -o template -n vm1 -f /var/kvm/images/vm1.img
+
+
+5、安装有用的virt管理工具^[[Virt-Tools](https://www.server-world.info/en/note?os=CentOS_7&p=kvm&f=9)]
+
+> [root@boss420 qemu]# yum -y install libguestfs-tools virt-top
+
+
+
+删除虚拟机^[[虚拟化之KVM virsh常用命令篇](http://www.cnblogs.com/lin1/p/5776280.html)]  
+
+>[root@boss420 images]# **virsh** destroy centos7  
+Domain centos7 destroyed  
+[root@boss420 images]# **virsh** undefine centos7  
+Domain centos7 has been undefined  
+
+
+#### 直接从模板创建新的虚拟机（克隆）
+
+1、virt-clone 克隆  
+
+> [root@boss420 images]# virt-clone -o template -n vm1 -f /var/kvm/images/vm1.img  
+template  //备好的模板映像文件  
+vm1       //新的虚拟机名称  
+vm1.img   //新虚拟机文件的映像文件  
+
+2、在hoster宿主机上找到新虚拟机的网卡地址，并记录   
+
+> [root@boss420 images]# cat /etc/libvirt/qemu/vm1.xml   
+找到mac地址：**mac address='52:54:00:68:52:de'**  
+
+3、启动新虚拟机  
+
+> [root@boss420 images]# virsh start vm1  
+
+4、在虚拟机中修改网卡地址、配置IP地址  
+
+> [root@localhost ~]# cd /etc/sysconfig/network-scripts   
+[root@localhost network-scripts]#ip addr			#得到虚拟机eth接口名称  
+[root@localhost network-scripts]# mv ifcfg-eth0 ifcfg-ethx    #目标名称与上一步中得到的保持一致  
+[root@localhost network-scripts]# vi ifcfg-ethx  
+修改mac，用上面找到的mac地址  
+HWADDR="52:54:00:83:68:11"  
+IPADDR=10.1.23.111    
+NETMASK=255.255.255.0    
+GATEWAY=10.1.23.254    
+DNS=61.139.2.69    
+
+
+
+
+5、修改hostname，并reboot重启生效。  
+
+
+
+
+
 
 
 
