@@ -17,7 +17,7 @@ This passage is meant to record the essential information technology needs when 
 - 目录管理：LDAP  
 - *开发管理：持续集成与部署CI/CD*  
 - *运行监测：Zabbix*  
-- ERP：odoo^[[odoo](www.odoo.com)]或其他开源ERP^[[值得考虑的九大开源ERP系统](http://os.51cto.com/art/201804/570668.htm)]  
+- ERP：[odoo](http://www.odoo.com)或其他开源ERP^[[值得考虑的九大开源ERP系统](http://os.51cto.com/art/201804/570668.htm)]  
   
   
 **Production IT needs:**  
@@ -147,6 +147,7 @@ Remote file exists.
 **修改IP地址**
 
 1、设置网卡信息  
+
 >[root@localhost network-scripts]# vi ifcfg-eth0  
 NAME="eth0"  
 HWADDR="52:54:00:5f:c1:ea"  
@@ -162,9 +163,11 @@ GATEWAY=10.1.23.254
 DNS=61.139.2.69**  
 
 2、重启网络  
+
 >[root@localhost network-scripts]# systemctl restart network.service
 
 3、nameserver设置
+
 >[root@vm1 ~]# ping www.baidu.com  
 ping: www.baidu.com: Name or service not known
 
@@ -173,7 +176,36 @@ nameserver 8.8.8.8
 nameserver 8.8.4.4  
 
 
+**网络故障排查步骤^[[Linux网络故障排查总结](https://blog.csdn.net/li_101357/article/details/70257001)]**  
 
+1、检查网络设备  
+网卡必须处在up状态（state必须处于up状态）
+
+2、检查IP地址是否配置上了  
+
+>[root@vm1 ~] ip addr
+
+3、配置网关和路由  
+
+查看路由：
+
+>[root@boss420 ~]# ip route show  
+default via 10.1.23.254 dev br0 proto static metric 425  
+10.1.23.0/24 dev br0 proto kernel scope link src 10.1.23.100 metric 425  
+172.17.0.0/16 dev docker0 proto kernel scope link src 172.17.0.1  
+192.168.122.0/24 dev virbr0 proto kernel scope link src 192.168.122.1  
+
+
+4、检查域名解析
+
+修改/etc/resolve.conf文件
+
+5、写入/etc/network/interface下的网卡配置文件，否则重启后不生效。
+
+
+**查看系统已启动的服务**  
+
+>[root@boss420 ~]# systemctl list-units --type=service  
 
 
 **任务管理器top**
@@ -205,6 +237,10 @@ q：退出
 
 
 ### KVM虚拟化
+
+
+[root@boss420 ~]# yum install vnc-server tigervnc -y
+
 
 #### 安装KVM^[[refer](https://www.server-world.info/en/note?os=CentOS_7&p=kvm&f=1)]  
 
@@ -348,12 +384,49 @@ DNS=61.139.2.69
 
 5、修改hostname，并reboot重启生效。  
 
+### 设置虚拟机开机自动启动 ###  
+
+
+> [root@boss420 ~]# **virsh autostart** test    
+Domain test marked as autostarted  
+[root@boss420 ~]# cd /etc/libvirt/qemu/autostart/  
+[root@boss420 autostart]# ll  
+total 0  
+lrwxrwxrwx 1 root root 26 Aug  3 20:09 test.xml -> /etc/libvirt/qemu/test.xml  
+[root@boss420 autostart]# **virsh autostart** vm1  
+Domain vm1 marked as autostarted  
+[root@boss420 autostart]# **virsh autostart** vm2  
+Domain vm2 marked as autostarted  
 
 
 
 
+### 解决虚拟机无法ping通网关的问题 ###
+
+1、在host上，查看虚拟机的网卡接口是否加载到网桥br0  
+
+> [root@boss420 ~]# **brctl show**  
+bridge name     bridge id               STP enabled     interfaces  
+br0             8000.f01fafdc280b       yes             em2  
+docker0         8000.02421b137ce4       no              veth19e8cd2  
+virbr0          8000.525400cca756       yes             virbr0-nic  
+
+发现第一行的br0的interfaces字段，只有host自身的em2网卡，没有虚拟机的网卡，需要添加。
+
+2、增加test、vm1、vm2三台虚拟机的interface到br0  
+
+> [root@boss420 ~]# brctl addif br0 vnet0  
+[root@boss420 ~]# brctl addif br0 vnet1  
+[root@boss420 ~]# brctl addif br0 vnet2  
 
 
+
+[在 CentOS 7 中所不見的命令](https://shazi.info/%E5%9C%A8-centos-7-%E4%B8%AD%E6%89%80%E4%B8%8D%E8%A6%8B%E7%9A%84%E5%91%BD%E4%BB%A4-round-1%EF%BC%9A-ifconfig%E3%80%81route%E3%80%81netstat%E3%80%81traceroute/)
+
+
+## DOCKER ##
+
+See this [article](/note/2018/08/03/docker-study/)
 
 
 
