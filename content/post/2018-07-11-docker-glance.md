@@ -4,7 +4,7 @@ author: ''
 date: '2018-07-11'
 slug: docker-glance
 categories: []
-tags: []
+tags: [docker]
 ---
 
 *README^[此文是《Docker — 从入门到实践》一书的重点摘要。[Docker — 从入门到实践](https://yeasy.gitbooks.io/docker_practice/)]
