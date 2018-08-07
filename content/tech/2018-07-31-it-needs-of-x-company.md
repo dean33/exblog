@@ -43,6 +43,22 @@ This passage is meant to record the essential information technology needs when 
 
 ### 常用命令  
 
+
+**查看是否安装了某软件**  
+
+
+>[root@djwy-153 ~]#  **yum list installed | grep mysql**  
+Repodata is over 2 weeks old. Install yum-cron? Or run: yum makecache fast  
+mysql-community-client.x86_64       5.7.20-1.el7                       @mysql57-community  
+mysql-community-common.x86_64       5.7.20-1.el7                       @mysql57-community  
+mysql-community-libs.x86_64         5.7.20-1.el7                       @mysql57-community  
+mysql-community-libs-compat.x86_64  5.7.20-1.el7                       @mysql57-community  
+mysql-community-server.x86_64       5.7.20-1.el7                       @mysql57-community  
+mysql57-community-release.noarch    el7-8                              installed  
+php-mysql.x86_64                    5.4.16-43.el7_4                    @updates  
+
+
+
 **升级系统**  
 
 > <font color='blue'>[root@hoster ~]#</font> **yum** -y update 
