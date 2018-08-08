@@ -150,7 +150,7 @@ tw.pool.ntp.org
 
 **下载文件wget命令^[[Centos下载文件wget命令详解](http://www.souvc.com/?p=1569)]**  
 
-> <font color='blue'>[root@hoster ~]#</font> **wget** --spider http://mirrors.aliyun.com/centos/7/isos/x86_64/CentOS-7-x86_64-DVD-1804.iso  
+> <font color='blue'>[root@hoster ~]#</font> **wget** - -spider http://mirrors.aliyun.com/centos/7/isos/x86_64/CentOS-7-x86_64-DVD-1804.iso  
 Spider mode enabled. Check if remote file exists.  
 --2018-08-01 18:30:53--  http://mirrors.aliyun.com/centos/7/isos/x86_64/CentOS-7-x86_64-DVD-1804.iso  
 Resolving mirrors.aliyun.com (mirrors.aliyun.com)... 182.242.142.95, 182.242.142.87, 182.242.142.88, ...  
@@ -158,6 +158,71 @@ Connecting to mirrors.aliyun.com (mirrors.aliyun.com)|182.242.142.95|:80... conn
 HTTP request sent, awaiting response... 200 OK  
 Length: 4470079488 (4.2G) [application/octet-stream]  
 Remote file exists.  
+
+**查看指定目录所占容量大小**
+
+>[root@boss420 zjdl]# **du -h --max-depth=1**  
+104K    ./arts  
+88M     ./design  
+5.0G    ./client  
+5.1G    .  
+
+>[root@boss420 zjdl]# **du -h --max-depth=0**  
+5.1G    .
+
+**修改ls目录看不清的黑底篮字体^[[Linux文本界面字体颜色修改](https://blog.csdn.net/zonghua521/article/details/78197976)]**
+
+在文本界面 系统目录的字体颜色是 黑底蓝字  严重看不清楚，对此作出修改
+
+使用 vi 编辑进入  /etc/DIR_COLORS
+
+找到“DIR 01;34   # directory”，将34改为36
+
+
+数字代表的颜色 在下面会有显示,你可以找到文件的两行注释：
+//Text color codes:  
+//30=black 31=red 32=green 33=yellow 34=blue 35=magenta 36=cyan 37=white
+
+
+**编辑.bashrc达到修改终端颜色效果**
+
+参考：[PS1应用之——修改linux终端命令行各字体颜色](https://www.cnblogs.com/Q--T/p/5394993.html)
+
+> [root@boss420 ~]# vim .bashrc
+
+加入下面一行后保存退出:
+
+>  PS1="\[\e[37;40m\][\[\e[32;40m\]\u\[\e[37;40m\]@\h \[\e[36;40m\]\w\[\e[0m\]]\\$ " 
+
+重新加载bash配置文件即可生效:
+
+> [root@boss420 ~]# source .bashrc
+
+
+**修改vim中字体颜色**
+
+1. vim ~/.vimrc 加入如下内容，将注释字体设置白色并不加粗
+ 
+> hi Comment ctermfg=white cterm =none 
+  cterm若设置为bold就是粗体。
+
+![img](https://raw.githubusercontent.com/dean33/exblog/master/static/2018-07-31-it-needs-for-company.files/2018-08-08-it-needs-vim-font-color.png)
+
+
+**让所有用户显示行号** 
+
+输入命令：vim /etc/vimrc
+
+在vimrc文件的最后添加：set nu,保存：wq
+
+手动加载配置：source /etc/bashrc
+
+这样不管是哪个用户在vim下都显示行号
+
+
+**Samba配置**
+
+[Samba](http://blog.mingguilu.com/2017/02/23/CentOS7%E4%BD%BF%E7%94%A8YUM%E6%90%AD%E5%BB%BASamba%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB/)
 
 
 **修改IP地址**
@@ -261,6 +326,7 @@ q：退出
 #### 安装KVM^[[refer](https://www.server-world.info/en/note?os=CentOS_7&p=kvm&f=1)]  
 
 [1]	Install KVM.  
+
 > <font color='blue'>[root@hoster ~]#</font> **yum** -y install qemu-kvm libvirt virt-install bridge-utils  
 <font color='grey'> # 确认kvm的模块加载了 </font>  
 > <font color='blue'>[root@hoster ~]#</font>  **lsmod | grep kvm**   
@@ -452,3 +518,5 @@ See this [article](/note/2018/08/03/docker-study/)
 ## 有用的链接 ##
 
 [Server-world](https://www.server-world.info/en/)
+
+[极客学院Linux Wiki](http://wiki.jikexueyuan.com/list/linux/)
