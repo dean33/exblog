@@ -27,6 +27,11 @@ tags: []
 在第二范式的基础上，不存在非主属性对主键的传递性依赖以及部分性依赖。
 
 
+### 列式存储 ###
+
+[相对于OLTP，列式存储到底好用在哪里？](http://dbaplus.cn/news-159-2032-1.html)
+
+
 
 ### 规范数据模型的三个层次^[规范数据模型（Canonical Data Model）的三层次图示——>[link](http://www.databaseanswers.org/data_models/canonical_data_models/index.htm)]###
 

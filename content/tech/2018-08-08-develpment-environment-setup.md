@@ -94,15 +94,15 @@ Hello world!
 
 Eclipse中的修改位置：在-->【Window】-->【Prefrences】-->【Java】-->【Installed JREs】
 
-![img](https://raw.githubusercontent.com/dean33/exblog/master/static/2018-08-08-development-env-mvn-eclipse-jre.png)
+![img](https://raw.githubusercontent.com/dean33/exblog/master/static/2018-08-08-development-env.files/2018-08-08-development-env-mvn-eclipse-jre.png)
 
 2、访问网页：http://localhost:8080/greeting
 
-![img](https://raw.githubusercontent.com/dean33/exblog/master/static/2018-08-08-development-env-springboot-run-default.png)
+![img](https://raw.githubusercontent.com/dean33/exblog/master/static/2018-08-08-development-env.files/2018-08-08-development-env-springboot-run-default.png)
 
    访问网页带参数：http://localhost:8080/greeting?name=zdy
 
-![img](https://raw.githubusercontent.com/dean33/exblog/master/static/2018-08-08-development-env-springboot-run-edit-param.png)
+![img](https://raw.githubusercontent.com/dean33/exblog/master/static/2018-08-08-development-env.files/2018-08-08-development-env-springboot-run-edit-param.png)
 
 
 

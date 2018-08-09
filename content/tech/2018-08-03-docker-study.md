@@ -61,3 +61,11 @@ CONTAINER ID        IMAGE                   COMMAND             CREATED         
 
 >[root@boss420 ~]# docker attach 797fa3ef5f33  
 [root@797fa3ef5f33 html]#
+
+
+
+## 应用 ##
+
+[京东大规模Kubernetes集群的精细化运营](http://dbaplus.cn/news-141-2139-1.html),梁小平,2018-07-23
+
+
