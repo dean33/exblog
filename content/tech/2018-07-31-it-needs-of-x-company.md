@@ -147,6 +147,35 @@ tw.pool.ntp.org
 在命令行提示符下按下Ctrl+R，终端将显示提示reverse-i-search。  
 只要用关键字搜索一下历史命令然后重新执行这条命令而不需要将整条命令再输入一遍。
 
+**查看用户登录日志**
+
+１、命令
+
+**w或who**  
+
+  >查看当前登入系统的用户信息。其中who -m等效于who am i。
+  
+**lastlog**
+
+>列出所有用户最近登录的信息，或者指定用户的最近登录信息。lastlog引用的是/var/log/lastlog文件中的信息，包括login-name、port、last login time　　
+
+**last**
+
+>列出当前和曾经登入系统的用户信息，它默认读取的是/var/log/wtmp文件的信息。输出的内容包括：用户名、终端位置、登录源信息、开始时间、结束时间、持续时间。
+
+
+２、文件
+Linux用户登录信息放在三个文件中：
+
+/var/run/utmp：记录当前正在登录系统的用户信息，默认由who和w记录当前登录用户的信息，uptime记录系统启动时间；
+
+/var/log/wtmp：记录当前正在登录和历史登录系统的用户信息，默认由last命令查看；　　
+
+/var/log/btmp：记录失败的登录尝试信息，默认由lastb命令查看。　　
+
+这三个文件都是二进制数据文件，并且三个文件结构完全相同,是由/usr/include/bits/utmp.h文件定义了这三个文件的结构体。
+
+
 
 **下载文件wget命令^[[Centos下载文件wget命令详解](http://www.souvc.com/?p=1569)]**  
 
