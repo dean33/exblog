@@ -249,9 +249,8 @@ Remote file exists.
 这样不管是哪个用户在vim下都显示行号
 
 
-**Samba配置**
 
-[Samba](http://blog.mingguilu.com/2017/02/23/CentOS7%E4%BD%BF%E7%94%A8YUM%E6%90%AD%E5%BB%BASamba%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB/)
+
 
 
 **修改IP地址**
@@ -345,12 +344,140 @@ h：帮助命令。
 q：退出  
 注：强调一下，**使用频率最高的是P、T、M**，因为通常使用top，我们就想看看是哪些进程最耗cpu资源、占用的内存最多  
 
+### crontab ###
+
+1、增加配置： 
+
+> [root@r420 /home/zdy/sync]# vim /etc/crontab
+
+![img](https://raw.githubusercontent.com/dean33/exblog/master/static/2018-07-31-it-needs-for-company.files/2018-08-10-crontab.png)
+
+2、检查当前crond服务是否启动
+
+>[root@r420 ~]# **service crond status**  
+Redirecting to /bin/systemctl status crond.service  
+-crond.service - Command Scheduler  
+   Loaded: loaded (/usr/lib/systemd/system/crond.service; enabled; vendor preset: enabled)  
+   Active: active (running) since Fri 2018-08-03 13:36:27 CST; 1 weeks 0 days ago  
+ Main PID: 1260 (crond)  
+    Tasks: 1  
+   Memory: 500.0K  
+   CGroup: /system.slice/crond.service  
+           └─1260 /usr/sbin/crond -n  
+   ...
+
+
+
+### Samba ###
+
+**概念**
+
+Unix Like 上面可以分享档案数据的 file system 是 NFS
+Windows 上面使用的『网络上的芳邻』所使用的文件系统则称为 Common Internet File System, CIFS
+
+SAMBA提供跨平台的文件访问服务^[[鸟哥：第十六章、文件服务器之二： SAMBA 服务器](http://cn.linux.vbird.org/linux_server/0370samba.php)]。
+
+1、Server Message Block (SMB)  
+2、SAMBA 则是透过两支服务来控制这两个步骤，分别是：
+
+- nmbd ：这个 daemon 是用来管理工作组啦、NetBIOS name 啦等等的解析。主要利用 UDP 协议开启 port 137, 138 来负责名称解析的任务；  
+- smbd ：这个 daemon 的主要功能就是用来管理 SAMBA 主机分享的目录、档案与打印机等等。 主要利用可靠的 TCP 协议来传输数据，开放的端口为 139 及 445(不一定存在) 。
+
+
+
+**配置步骤^[[Limited Accessed Shared Folder](https://www.server-world.info/en/note?os=CentOS_7&p=samba&f=2)]**
+
+1.创建待共享的目录，并给予适当权限  
+
+2.创建samba访问账号
+（1）创建操作系统账号
+
+> [root@r420 /etc/samba]# **useradd project**  
+
+（2）创建samba账号
+> [root@r420 /etc/samba]# **pdbedit -a -u project**  
+
+
+3.配置samba配置文件
+
+> [root@r420 /home/zdy/sync]# vim /etc/samba/smb.conf
+
+比较重要的有：
+
+> [global]  
+  unix charset = UTF-8  
+  dos charset = CP932  
+  hosts allow = 127.  10.1.  
+  security = user  
+  passdb backend = tdbsam  
+  [project] *-----> 希望共享用户看到的目录名字，随便取*  
+  path = /home/zdy/partner/zjdl  
+  writable = yes  
+  browsable = yes  
+  create mode = 0770  
+  directory mode = 0770  
+  valid users = @project  *-----> 指定属于project组的linux用户才能访问*
+  
+配置修改之后重启服务：
+
+> [root@r420 /home/zdy/partner/zjdl]# **systemctl restart smb nmb**
+  
+4.查看smb服务情况
+  
+  （1）smb.service服务：
+  
+> [root@r420 /home/zdy/partner/zjdl]# **systemctl status smb.service**  
+- smb.service - Samba SMB Daemon  
+   Loaded: loaded (/usr/lib/systemd/system/smb.service; enabled; vendor preset: disabled)  
+   Active: active (running) since Fri 2018-08-10 13:23:53 CST; 1h 44min ago  
+ Main PID: 29007 (smbd)  
+   Status: "smbd: ready to serve connections..."  
+    Tasks: 6  
+   Memory: 6.3M  
+   CGroup: /system.slice/smb.service  
+           ├─29007 /usr/sbin/smbd --foreground --no-process-group  
+           ├─29009 /usr/sbin/smbd --foreground --no-process-group  
+           ├─29010 /usr/sbin/smbd --foreground --no-process-group  
+           ├─29011 /usr/sbin/smbd --foreground --no-process-group  
+           ├─29013 /usr/sbin/smbd --foreground --no-process-group  
+           └─29042 /usr/sbin/smbd --foreground --no-process-group  
+
+  （2）nmb.service服务：
+  
+>[root@r420 /home/zdy/partner/zjdl]# **systemctl status nmb.service**  
+- nmb.service - Samba NMB Daemon  
+   Loaded: loaded (/usr/lib/systemd/system/nmb.service; enabled; vendor preset: disabled)  
+   Active: active (running) since Fri 2018-08-10 13:23:53 CST; 1h 45min ago  
+ Main PID: 29005 (nmbd)  
+   Status: "nmbd: ready to serve connections..."  
+    Tasks: 1  
+   Memory: 1.8M  
+   CGroup: /system.slice/nmb.service  
+           └─29005 /usr/sbin/nmbd --foreground --no-process-group  
+
+  （3）排错可查看日志
+  
+> [root@r420 /home/zdy/partner/zjdl]# journalctl -xe
+  
+
+5、Window下访问
+
+(1)打开命令行  
+
+> \\10.1.23.100
+
+(2)检查windows下保存的密码凭据,命令行下：
+
+> control userpasswords2
+
+
+  
+**一个比较全的配置参考：[Samba](http://blog.mingguilu.com/2017/02/23/CentOS7%E4%BD%BF%E7%94%A8YUM%E6%90%AD%E5%BB%BASamba%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB/)**
+
 
 ### KVM虚拟化
 
-
-[root@boss420 ~]# yum install vnc-server tigervnc -y
-
+> [root@boss420 ~]# yum install vnc-server tigervnc -y  
 
 #### 安装KVM^[[refer](https://www.server-world.info/en/note?os=CentOS_7&p=kvm&f=1)]  
 
