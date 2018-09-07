@@ -1,12 +1,14 @@
 ---
-title: Data Warehosing practice
+title: Data Warehouse and data mining
 author: ''
 date: '2018-07-19'
-slug: data-warehosing-practice
+slug: data-warehouse-and-data-mining
 categories:
   - tech
 tags: []
 ---
+
+# Ⅰ. Data warehouse #
 
 ## 概念Concept  ##
 
@@ -51,10 +53,11 @@ tags: []
 ![img](https://raw.githubusercontent.com/dean33/exblog/master/static/2018-07-19-data-warehosing-practice.files/Dimensional-Model.png)
 
 　　多维数据模型是为了满足用户从多角度多层次进行数据查询和分析的需要而建立起来的基于事实和维的数据库模型，其基本的应用是为了实现OLAP（Online Analytical Processing）。^[数据仓库的多维数据模型,[link](http://webdataanalysis.net/web-data-warehouse/multidimensional-data-model/)]
-　　
-　　
-　　- 优点：基于分析优化的数据组织和存储模式。  
-　　- 缺点：与关系模型相比其灵活性不够，一旦模型构建就很难进行更改。  
+
+
+
+- 优点：基于分析优化的数据组织和存储模式。   
+- 缺点：与关系模型相比其灵活性不够，一旦模型构建就很难进行更改。  
 
 
 
@@ -232,5 +235,27 @@ OLTP是传统的关系型数据库的主要应用，主要是基本的、日常�
    [网站数据分析](http://webdataanalysis.net/)  
    [Pivotal微信] 微信号：pivotal_china
    
+# Ⅱ. Data mining #
+
+## 概念 ##
+
+**数据挖掘（英语：data mining）^[[wikipedia中‘数据挖掘’的定义](https://zh.wikipedia.org/wiki/数据挖掘)]**
+
+- 是一个跨学科的计算机科学分支。  
+- 它是用人工智能、机器学习、统计学和数据库的交叉方法在相对较大型的**数据集中发现模式的计算过程**。
+
+**数据挖掘过程的总体目标**
+
+- **从一个数据集中提取信息，并将其转换成可理解的结构，以进一步使用**。  
+- 除了原始分析步骤，它还涉及到数据库和数据管理方面、数据预处理、模型与推断方面考量、兴趣度度量、复杂度的考虑，以及发现结构、可视化及在线更新等后处理。  
+- 数据挖掘是“数据库知识发现”（KDD）的分析步骤，本质上属于机器学习的范畴。  
+
+**VS. 数据分析^[[wikipedia中‘数据分析’的定义](https://zh.wikipedia.org/wiki/%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90)]**
+
+- 数据分析是一类统计方法，其主要特点是多维性和描述性。
+- 有些几何方法有助于揭示不同的数据之间存在的关系，并绘制出统计信息图，以更简洁的解释这些数据中包含的主要信息。  
+- 其他一些用于收集数据，以便弄清哪些是同质的，从而更好地了解数据。
+
+
 
 
