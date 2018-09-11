@@ -35,7 +35,7 @@ footnotereturnlinkcontents = "↩"
     url = "/index.xml"
 
 [params]
-    footer = "&copy; [Deyin](https://stobs.netlify.com) 2018 | [Github](https://github.com/dean33)"
+    footer = "&copy; [homelink](https://stobs.netlify.com) 2018 | [Github](https://github.com/dean33)"
 
   highlightjsVersion = "9.12.0"
   highlightjsCDN = "//cdn.bootcss.com"
